@@ -1,0 +1,68 @@
+body {
+  background: url('adminwall.png') no-repeat center center fixed;
+  background-size: cover;
+  font-family: Arial, sans-serif;
+}
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  
+}
+
+.login-box {
+  background: rgba(255, 255, 255, 0.473);
+  padding: 4rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  height: 350px;
+  margin-left: 400px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.actions button {
+  padding: 10px 70px;
+  margin: 10px;
+  
+  border-radius: 5px;
+  border-width: 1;
+  border-color: black;
+  cursor: pointer;
+}
+
+.actions button:first-child {
+  background: #232fd1;
+  color: white;
+}
+
+.actions button:last-child {
+  background: #ece9e9;
+  color: rgb(0, 0, 0);
+}
+
+.links a {
+  display: block;
+  margin: 10px 0;
+  color: #0a07b3;
+  text-decoration: none;
+}
+.signup-link {
+  color: #0a07b3;
+  cursor: pointer;
+ 
+}
+.signup-link:hover {
+  color: darkblue;
+}
+

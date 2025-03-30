@@ -1,0 +1,62 @@
+.register-container {
+    width: 300px;
+    margin: auto;
+    margin-left: 500px;
+    padding: 20px;
+    padding-right: 45px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f96e;
+    text-align: center;
+  }
+  
+  .input-field {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .otp-button {
+    width: 108%;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .otp-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .actions button {
+    width: 100%;
+    padding: 10px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .actions button:first-child {
+    background-color: #1c114d;
+    color: white;
+  }
+  
+  .actions button:first-child:hover {
+    background-color: #270083;
+  }
+  
+  .actions button:last-child {
+    background-color: #aaaaaa;
+    color: white;
+  }
+  
+  .actions button:last-child:hover {
+    background-color: #c4c4c4;
+  }
+  
