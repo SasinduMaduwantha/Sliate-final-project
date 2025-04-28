@@ -1,0 +1,78 @@
+
+.dashboard-container {
+  padding: 0;
+  margin: 0;
+  width: 100vw; /* Full viewport width */
+  height: 100vh; /* Full viewport height */
+  background: url('ds3.png') no-repeat center center fixed;
+  background-size: cover;
+  position: fixed; /* Ensures it covers the entire viewport */
+  top: 0;
+  left: 0;
+}
+
+
+
+.navbar {
+  margin-top: 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;  /* Ensures the profile and text are vertically centered */
+  padding: 10px 10px;
+  height: 37px;
+  background-color: #333;
+  color: white;
+}
+
+.navbar h1 {
+  margin: 0;
+  font-size: 20px;  /* Adjust the font size for better visibility */
+}
+
+/* Profile image container */
+.profile-container {
+  display: flex;
+  align-items: center;
+}
+
+/* Profile image styling */
+.profile-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+/* Dashboard grid to center the cards */
+.dashboard-grid {
+  display: flex;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Auto-fit for better responsiveness */
+  gap: 20px;
+  margin-left: 10px;
+  margin-top: 150px;
+  margin-bottom: 130px;
+  justify-items: center; /* Centers the cards */
+}
+
+/* Card styling */
+.dashboard-card {
+  background: rgb(253, 253, 253);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.2s;
+  width: 135.2px;
+ 
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Icon styling */
+.card-icon {
+  margin-bottom: 10px;
+  color: #4043e6;
+}

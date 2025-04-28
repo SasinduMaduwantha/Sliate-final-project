@@ -1,15 +1,19 @@
 body {
-  background: url('adminwall.png') no-repeat center center fixed;
-  background-size: cover;
+  
   font-family: Arial, sans-serif;
 }
 
 .login-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
+  
+    background: url('adminwall.png') no-repeat center center fixed;
+    background-size: cover;  /* Ensures the image covers the entire area */
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; 
+    width: 215.6vh;
   
 }
 
@@ -20,7 +24,7 @@ body {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   text-align: center;
   height: 350px;
-  margin-left: 400px;
+  
 }
 
 input {
@@ -33,8 +37,8 @@ input {
 
 .actions button {
   padding: 10px 70px;
-  margin: 10px;
-  
+  margin: 0px;
+  margin-bottom: 10px;
   border-radius: 5px;
   border-width: 1;
   border-color: black;

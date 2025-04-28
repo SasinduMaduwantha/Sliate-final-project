@@ -1,0 +1,143 @@
+/* InvoiceAdminPanel.css */
+
+.invoice-container {
+    max-width: 1400px;
+    height: 615px;
+    margin: 0px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .invoice-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: center;
+  }
+
+  .date-range {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .filters input[type="text"]{
+    margin-left: 20px;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    width: 250px;
+
+  }
+  .filters input[type="date"] {
+    padding: 8px 12px;
+    margin-left: 20px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    min-width: 250px;
+  }
+  
+  .addbutton {
+   
+    padding:0px 100px;
+   height: 50px;
+    background-color: #007bff;
+    color: white;
+    text-align: left;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .filters button:hover {
+    background-color: #0056b3;
+  }
+  
+  .invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-left: auto; /* move to right */
+  }
+  
+  .invoice-table th,
+  .invoice-table td {
+    padding: 5px 40px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+  
+  .invoice-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .invoice-table tr:nth-child(even) {
+    background-color: #fafafa;
+  }
+  
+  .invoice-table tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .invoice-table button {
+    padding: 6px 10px;
+    
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+  }
+  
+ 
+  
+  .details-button {
+    background-color: #28a745;
+    margin-left: 0px;
+    width: 100px;
+   
+  }
+  
+  .details-button:hover {
+    background-color: #105e21;
+  }
+  .delete-button {
+    background-color: #c5222a;
+    margin-left: 10px;
+    margin-top: 5px;
+   
+  }
+  
+  .delete-button:hover {
+    background-color: #701010;
+  }
+
+  .reset-button {
+    margin-left: 10px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .reset-button:hover {
+    background-color: #d32f2f;
+  }
+  
+  

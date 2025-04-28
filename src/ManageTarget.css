@@ -1,0 +1,105 @@
+.target-manage-container {
+    padding: 20px;
+    margin-top: 40px;
+    margin-bottom: 100px;
+    font-family: Arial, Helvetica;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0);
+  }
+  
+  .target-content-wrapper {
+    display: flex;
+    gap: 100px;
+    align-items: flex-start;
+  }
+  
+  .target-form-wrapper {
+    flex: 1;
+  }
+  
+  .target-table-wrapper {
+    flex: 2;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    align-self: flex-start; 
+  }
+  
+  .target-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+  }
+  
+  .target-table th,
+  .target-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .target-table th {
+    position: sticky;
+    top: 0;
+    background-color: #f1f1f1;
+    z-index: 1;
+  }
+  
+  .target-form-section {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .target-input {
+    height: 30px;
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+  }
+  
+  .target-button {
+    width: 200px;
+    height: 55px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  .target-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .target-delete-btn {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .target-delete-btn:hover {
+    background-color: darkred;
+  }
+  
+  .delete-all-btn {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px;
+    width: 150px;
+    height: 40px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .delete-all-btn:hover {
+    background-color: #c0392b;
+  }
+  

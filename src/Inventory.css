@@ -1,0 +1,113 @@
+body {
+  
+    background-image: url('./assets/inventory.avif'); /* Adjust the path */
+    background-size: cover;  /* Cover entire page */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Prevent repetition */
+    background-attachment: fixed; /* Keep background fixed on scroll */
+}
+
+.container {
+    display: flex;
+    gap: 100px;
+    padding: 20px;
+    margin-left: 150px;
+    margin-bottom: 50px;
+    
+  }
+  .heading{
+    color: brown;
+    margin-left: 25px;
+    
+  }
+  
+  .form-container {
+    flex: 1;
+    
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+  
+  .table-container {
+    max-height: 400px; /* Adjust height as needed */
+    overflow-y: auto; /* Enable vertical scrolling */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 0px;
+    padding-left: 10px;
+    padding-right: 10px;
+    
+  }
+  
+  h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+  
+  input {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px 0px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .search-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    
+  }
+  
+  .search-row input {
+    flex: 1;
+    height: 15px;
+  }
+  
+  button {
+    padding: 10px 15px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 80px;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  .button-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    
+  }
+  
+  table {
+    width: 500px;
+    border-collapse: collapse;
+    background-color: #fff;
+  }
+  
+  thead {
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    z-index: 10;
+  }
+  
+  th, td {
+    padding: 10px;
+    border: 2px solid #ddd;
+    text-align: left;
+  }
+  
+  tbody tr:hover {
+    background-color: #f5f5f5;
+  }
+  
