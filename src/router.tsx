@@ -6,6 +6,12 @@ import Inventory from "./inventory";
 import Setpassword from "./setpassword";
 import ManageTarget from "./ManageTarget";
 import InvoiceAdminPanel from "./invoices";
+import AssignDelivery from "./AssignDelivery";
+import DeliveryStatus from "./DeliveryStatus";
+
+
+
+
 const RouterComponent = () => {
   return (
     <Router>
@@ -17,6 +23,8 @@ const RouterComponent = () => {
         <Route path="/setpassword" element={<Setpassword />} />
         <Route path="/ManageTarget" element={<ManageTarget />} />
         <Route path="/invoice" element={<InvoiceAdminPanel />} />
+        <Route path="/assigndelivery" element={<AssignDelivery/>} />
+        <Route path="/deliverystatus" element={<DeliveryStatus />} />
       </Routes>
     </Router>
   );

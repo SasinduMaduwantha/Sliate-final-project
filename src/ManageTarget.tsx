@@ -4,7 +4,6 @@ import {
   collection,
   addDoc,
   getDocs,
-  updateDoc,
   doc,
   deleteDoc,
   query,
@@ -95,22 +94,43 @@ const ManageTarget = () => {
       alert("Enter a new target value for all sellers.");
       return;
     }
-
+  
     try {
-      const snapshot = await getDocs(collection(db, "employeeTargets"));
-      const updatePromises = snapshot.docs.map((docSnap) =>
-        updateDoc(doc(db, "employeeTargets", docSnap.id), {
+      const q = query(collection(db, "users"), where("jobType", "==", "Seller"));
+      const querySnapshot = await getDocs(q);
+  
+      if (querySnapshot.empty) {
+        alert("No sellers found!");
+        return;
+      }
+  
+      const currentMonth = getCurrentMonth();
+      const currentDate = getCurrentDate();
+  
+      const addPromises = querySnapshot.docs.map(async (userDoc) => {
+        const employeeNo = userDoc.data().employeeNo;
+  
+        const newTarget: Omit<Target, "id"> = {
+          employeeNo,
+          achievement: 0,
           target: parseInt(newGlobalTarget),
-        })
-      );
-      await Promise.all(updatePromises);
-      alert(`Target updated to ${newGlobalTarget} for all sellers.`);
-      window.location.reload();
+          month: currentMonth,
+          systemDate: currentDate,
+        };
+  
+        return addDoc(collection(db, "employeeTargets"), newTarget);
+      });
+  
+      await Promise.all(addPromises);
+  
+      alert(`Target set to ${newGlobalTarget} for all sellers.`);
+      fetchTargets(); // Refresh list
+      setNewGlobalTarget("");
     } catch (error) {
-      console.error("Error updating all targets:", error);
+      console.error("Error updating targets for all sellers:", error);
     }
   };
-
+  
   const handleDeleteTarget = async (id: string) => {
     try {
       await deleteDoc(doc(db, "employeeTargets", id));
@@ -137,6 +157,12 @@ const ManageTarget = () => {
     } catch (error) {
       console.error("Error deleting all targets:", error);
     }
+  };
+
+  // Helper function to calculate overflow
+  const calculateOverflow = (achievement: number, target: number) => {
+    const overflow = achievement - target;
+    return overflow > 0 ? overflow : 0;
   };
 
   return (
@@ -195,7 +221,7 @@ const ManageTarget = () => {
                 <th>Employee No</th>
                 <th>Target</th>
                 <th>Achievement</th>
-                <th>Month</th>
+                <th>Best Selling</th> {/* ✅ new column */}
                 <th>System Date</th>
                 <th>Action</th>
               </tr>
@@ -206,7 +232,9 @@ const ManageTarget = () => {
                   <td>{item.employeeNo}</td>
                   <td>{item.target}</td>
                   <td>{item.achievement}</td>
-                  <td>{item.month}</td>
+                  <td style={{ color: calculateOverflow(item.achievement, item.target) > 0 ? "green" : "black" }}>
+                    {calculateOverflow(item.achievement, item.target)}
+                  </td>
                   <td>{item.systemDate}</td>
                   <td>
                     <button

@@ -126,6 +126,15 @@ const Inventory = () => {
     setSearchQuery("");
     
   };
+  const handleClearBut = () => {
+    setItemNo("");
+    setItemName("");
+    setPrice("");
+    setQuantity("");
+    setSearchQuery("");
+    window.location.reload(); 
+  };
+
 
   return (
     <div className="bg">
@@ -147,7 +156,7 @@ const Inventory = () => {
           <button onClick={handleAdd}>Add</button>
           <button onClick={handleUpdate}>Update</button>
           <button onClick={handleDelete}>Delete</button>
-          <button onClick={handleClear}>Clear</button>
+          <button onClick={handleClearBut}>Clear</button>
         </div>
       </div>
 
