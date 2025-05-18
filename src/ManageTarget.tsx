@@ -133,6 +133,7 @@ const ManageTarget = () => {
   
   const handleDeleteTarget = async (id: string) => {
     try {
+      if (!window.confirm('Are you sure you want to delete this Target record?')) return;
       await deleteDoc(doc(db, "employeeTargets", id));
       setTargetList(targetList.filter((item) => item.id !== id));
     } catch (error) {

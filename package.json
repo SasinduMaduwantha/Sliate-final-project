@@ -20,6 +20,7 @@
     "expo-crypto": "^14.0.2",
     "express": "^4.21.2",
     "firebase": "^11.5.0",
+    "firebase-admin": "^13.3.0",
     "nodemailer": "^6.10.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

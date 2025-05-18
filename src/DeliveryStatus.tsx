@@ -201,71 +201,80 @@ const fetchDeliveryStatus = async () => {
   
 
   const handleAddToStock = async () => {
-    try {
-      const billNo = Number(inputBillNo);
-      if (!billNo) return alert("Enter a valid Bill No");
-  
-      // Check if the bill is in deliverystatus and is Rejected
-      const statusQuery = query(
-        collection(db, "deliverystatus"),
-        where("billNo", "==", billNo.toString())
-      );
-      const statusSnapshot = await getDocs(statusQuery);
-  
-      if (statusSnapshot.empty) {
-        return alert("Bill not found in delivery status.");
-      }
-  
-      const statusData = statusSnapshot.docs[0].data();
-      if (statusData.deliveryStatus !== "Rejected") {
-        return alert("Only Rejected bills can be added to stock.");
-        
-      }
-  
-      // Get invoice from assignedInvoices
-      const invoiceQuery = query(
-        collection(db, "assignedInvoices"),
-        where("billNo", "==", billNo)
-      );
-      const invoiceSnapshot = await getDocs(invoiceQuery);
-  
-      if (invoiceSnapshot.empty) {
-        return alert("Assigned invoice not found for this bill.");
-      }
-  
-      const invoiceData = invoiceSnapshot.docs[0].data();
-      const items = invoiceData.items || [];
-  
-      const batch = writeBatch(db);
-  
-      // Update inventory
-      for (const item of items) {
-        const stockQuery = query(
-          collection(db, "inventory"),
-          where("itemNo", "==", item.itemNo)
-        );
-        const stockSnapshot = await getDocs(stockQuery);
-  
-        if (!stockSnapshot.empty) {
-          const stockDoc = stockSnapshot.docs[0];
-          const currentQty = Number(stockDoc.data().quantity || 0);
-          const updatedQty = currentQty + Number(item.quantity);
-          batch.update(stockDoc.ref, { quantity: updatedQty.toString() });
-        }
-      }
-  
-      // Delete from deliverystatus
-      statusSnapshot.forEach((doc) => batch.delete(doc.ref));
-      await batch.commit();
-  
-      alert("Stock updated and bill removed.");
-      setInputBillNo("");
-      fetchDeliveryStatus();
-    } catch (error) {
-      console.error("Error adding to stock:", error);
-      alert("Failed to add to stock.");
+  try {
+    const billNo = Number(inputBillNo);
+    if (!billNo) return alert("Enter a valid Bill No");
+
+    // Check if the bill is in deliverystatus and is Rejected
+    const statusQuery = query(
+      collection(db, "deliverystatus"),
+      where("billNo", "==", billNo.toString())
+    );
+    const statusSnapshot = await getDocs(statusQuery);
+
+    if (statusSnapshot.empty) {
+      return alert("Bill not found in delivery status.");
     }
-  };
+
+    const statusDoc = statusSnapshot.docs[0];
+    const statusData = statusDoc.data();
+
+    if (statusData.deliveryStatus !== "Rejected") {
+      return alert("Only Rejected bills can be added to stock.");
+    }
+
+    // Get invoice from assignedInvoices
+    const invoiceQuery = query(
+      collection(db, "assignedInvoices"),
+      where("billNo", "==", billNo)
+    );
+    const invoiceSnapshot = await getDocs(invoiceQuery);
+
+    if (invoiceSnapshot.empty) {
+      return alert("Assigned invoice not found for this bill.");
+    }
+
+    const invoiceData = invoiceSnapshot.docs[0].data();
+    const items = invoiceData.items || [];
+
+    const batch = writeBatch(db);
+
+    // Update inventory
+    for (const item of items) {
+      const stockQuery = query(
+        collection(db, "inventory"),
+        where("itemNo", "==", item.itemNo)
+      );
+      const stockSnapshot = await getDocs(stockQuery);
+
+      if (!stockSnapshot.empty) {
+        const stockDoc = stockSnapshot.docs[0];
+        const currentQty = Number(stockDoc.data().quantity || 0);
+        const updatedQty = currentQty + Number(item.quantity);
+        batch.update(stockDoc.ref, { quantity: updatedQty.toString() });
+      }
+    }
+
+    // Save to 'rejectedbill' collection before deletion
+    await addDoc(collection(db, "rejectedbill"), {
+      billNo: billNo.toString(),
+      reason: "Rejected and restocked",
+      timestamp: new Date(),
+    });
+
+    // Delete from deliverystatus
+    statusSnapshot.forEach((doc) => batch.delete(doc.ref));
+    await batch.commit();
+
+    alert("Stock updated !");
+    setInputBillNo("");
+    fetchDeliveryStatus();
+  } catch (error) {
+    console.error("Error adding to stock:", error);
+    alert("Failed to add to stock.");
+  }
+};
+
   
   
 

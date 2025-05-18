@@ -28,6 +28,7 @@ type Invoice = {
   totalAmount: number;
   createdAt: Timestamp;
   city: string;
+  sellerEmpNo: string;
 };
 
 const AssignDelivery = () => {
@@ -39,7 +40,9 @@ const AssignDelivery = () => {
   const [city, setCity] = useState('');
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
+  const [assignedBillNos, setAssignedBillNos] = useState<string[]>([]); // NEW STATE
 
+  // Fetch deliverers, invoices, shops data initially
   useEffect(() => {
     const fetchData = async () => {
       const [deliverSnap, invoiceSnap, shopSnap] = await Promise.all([
@@ -61,7 +64,7 @@ const AssignDelivery = () => {
         const validImage =
           typeof data.profileImage === 'string' && data.profileImage.startsWith('http')
             ? data.profileImage
-            : 'https://via.placeholder.com/100';
+            : 'https://avatar.iran.liara.run/public/35';
 
         return {
           employeeNo: data.employeeNo,
@@ -82,6 +85,7 @@ const AssignDelivery = () => {
           createdAt: data.createdAt,
           items: data.items || [],
           city: shopMap[data.shopName] || 'N/A',
+          sellerEmpNo: data.sellerEmpNo || 'N/A',
         } as Invoice;
       });
 
@@ -92,6 +96,31 @@ const AssignDelivery = () => {
 
     fetchData();
   }, []);
+
+  // Fetch assigned bills for the selected deliverer
+  useEffect(() => {
+    const fetchAssignedBills = async (employeeNo: string) => {
+      const assignedDeliveriesRef = collection(db, 'assignedDeliveries');
+      const q = query(assignedDeliveriesRef, where('deliverEmpNo', '==', employeeNo));
+      const querySnapshot = await getDocs(q);
+
+      let allBills: string[] = [];
+      querySnapshot.forEach(doc => {
+        const data = doc.data();
+        if (Array.isArray(data.billNos)) {
+          allBills = allBills.concat(data.billNos);
+        }
+      });
+
+      setAssignedBillNos(allBills);
+    };
+
+    if (selectedDeliverer) {
+      fetchAssignedBills(selectedDeliverer.employeeNo);
+    } else {
+      setAssignedBillNos([]);
+    }
+  }, [selectedDeliverer]);
 
   const handleFilter = () => {
     let filtered = invoices;
@@ -125,7 +154,7 @@ const AssignDelivery = () => {
     const batch = writeBatch(db);
 
     // Assign each bill separately with the selected deliverer
-    selectedBills.forEach(async (billNo) => {
+    selectedBills.forEach((billNo) => {
       const assignedRef = doc(collection(db, 'assignedDeliveries'));
       batch.set(assignedRef, {
         deliverEmpNo: selectedDeliverer.employeeNo,
@@ -154,6 +183,23 @@ const AssignDelivery = () => {
     const remaining = invoices.filter(inv => !selectedBills.includes(inv.billNo));
     setInvoices(remaining);
     setFilteredInvoices(remaining);
+
+    // Refresh assigned bills after assignment
+    if (selectedDeliverer) {
+      const assignedDeliveriesRef = collection(db, 'assignedDeliveries');
+      const q = query(assignedDeliveriesRef, where('deliverEmpNo', '==', selectedDeliverer.employeeNo));
+      const querySnapshot = await getDocs(q);
+
+      let allBills: string[] = [];
+      querySnapshot.forEach(doc => {
+        const data = doc.data();
+        if (Array.isArray(data.billNos)) {
+          allBills = allBills.concat(data.billNos);
+        }
+      });
+
+      setAssignedBillNos(allBills);
+    }
   };
 
   return (
@@ -182,18 +228,35 @@ const AssignDelivery = () => {
               alt="Profile"
               className="assign-profile-img"
               onError={(e) =>
-                ((e.target as HTMLImageElement).src = 'https://avatar.iran.liara.run/public/35')
+                ((e.target as HTMLImageElement).src = 'https://cdn-icons-png.flaticon.com/512/149/149071.png')
               }
             />
             <p><strong>Name:</strong> {selectedDeliverer.name}</p>
             <p><strong>Contact:</strong> {selectedDeliverer.contactNo}</p>
             <p><strong>Email:</strong> {selectedDeliverer.email}</p>
             <p><strong>Employee No:</strong> {selectedDeliverer.employeeNo}</p>
+
+            {/* Display assigned bill numbers */}
+            <div className="assign-deliverer-bills">
+              <p><strong>Assigned Bill Nos:</strong></p>
+              {assignedBillNos.length > 0 ? (
+                <ul>
+                  {assignedBillNos.map(billNo => (
+                    <li key={billNo}>{billNo}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p style={{ color: 'gray' }}>No bills assigned yet.</p>
+              )}
+            </div>
           </div>
         )}
         <button
           className="assign-reset-button"
-          onClick={() => setSelectedDeliverer(null)}
+          onClick={() => {
+            setSelectedDeliverer(null);
+            setAssignedBillNos([]);
+          }}
           style={{ marginTop: '10px' }}
         >
           Reset Deliverer
@@ -227,7 +290,7 @@ const AssignDelivery = () => {
           <button
             onClick={() =>
               setSelectedBills(filteredInvoices.map(inv => inv.billNo))
-            } 
+            }
             className='topbutton'
           >
             Select All
@@ -258,31 +321,43 @@ const AssignDelivery = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredInvoices.map(inv => (
-              <tr key={inv.id}>
-                <td>
-                  <input
-                    type="checkbox"
-                    checked={selectedBills.includes(inv.billNo)}
-                    onChange={e => {
-                      if (e.target.checked) {
-                        setSelectedBills([...selectedBills, inv.billNo]);
-                      } else {
-                        setSelectedBills(
-                          selectedBills.filter(b => b !== inv.billNo)
-                        );
-                      }
-                    }}
-                  />
-                </td>
-                <td>{inv.billNo}</td>
-                <td>{inv.shopName}</td>
-                <td>{inv.totalAmount}</td>
-                <td>{inv.city}</td>
-                <td>{new Date(inv.createdAt.toDate()).toLocaleDateString()}</td>
-              </tr>
-            ))}
-          </tbody>
+  {[...filteredInvoices]
+    .sort((a, b) => {
+      // Convert billNo to number if possible, fallback to string comparison
+      const billA = isNaN(Number(a.billNo)) ? a.billNo : Number(a.billNo);
+      const billB = isNaN(Number(b.billNo)) ? b.billNo : Number(b.billNo);
+      
+      if (typeof billA === 'number' && typeof billB === 'number') {
+        return billB - billA; // descending numeric order
+      }
+      return String(billB).localeCompare(String(billA)); // descending string order
+    })
+    .map(inv => (
+      <tr key={inv.id}>
+        <td>
+          <input
+            type="checkbox"
+            checked={selectedBills.includes(inv.billNo)}
+            onChange={e => {
+              if (e.target.checked) {
+                setSelectedBills([...selectedBills, inv.billNo]);
+              } else {
+                setSelectedBills(
+                  selectedBills.filter(b => b !== inv.billNo)
+                );
+              }
+            }}
+          />
+        </td>
+        <td>{inv.billNo}</td>
+        <td>{inv.shopName}</td>
+        <td>{inv.totalAmount}</td>
+        <td>{inv.city}</td>
+        <td>{new Date(inv.createdAt.toDate()).toLocaleDateString()}</td>
+      </tr>
+  ))}
+</tbody>
+
         </table>
 
         <button className="assign-assign-button" onClick={handleAssign}>

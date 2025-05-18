@@ -8,6 +8,8 @@ import ManageTarget from "./ManageTarget";
 import InvoiceAdminPanel from "./invoices";
 import AssignDelivery from "./AssignDelivery";
 import DeliveryStatus from "./DeliveryStatus";
+import ManageEmp from "./ManageEmp";
+import Reports from "./reports";
 
 
 
@@ -25,6 +27,8 @@ const RouterComponent = () => {
         <Route path="/invoice" element={<InvoiceAdminPanel />} />
         <Route path="/assigndelivery" element={<AssignDelivery/>} />
         <Route path="/deliverystatus" element={<DeliveryStatus />} />
+        <Route path="/manageemp" element={<ManageEmp />} />
+        <Route path="/reports" element={<Reports />} />
       </Routes>
     </Router>
   );

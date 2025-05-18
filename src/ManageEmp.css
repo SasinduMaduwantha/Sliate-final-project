@@ -1,0 +1,81 @@
+.manage-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    align-items: center; /* Center the delete section horizontally */
+  }
+  .headh2{
+    margin-inline-end: auto;
+  }
+  .delete-section {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .delete-section input {
+    padding: 10px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .delete-section button {
+    padding: 10px 100px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  /* NEW: Make tables appear in same row */
+  .tables-container {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .table-section {
+    flex: 1;
+    max-width: 700px;
+    background: #fff;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  
+  .emp-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .emp-table th,
+  .emp-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .emp-table th {
+    background-color: #f2f2f2;
+  }
+  .count {
+    font-size: 0.9em;
+    color: gray;
+  }
+  .table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .filter-group input {
+    padding: 5px 0px;
+    font-size: 0.9em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+    

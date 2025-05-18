@@ -8,11 +8,11 @@ const Dashboard = () => {
   const dashboardItems = [
     { icon: <FaBox size={40} />, title: "Manage Inventory", description: "Add, Update, Delete", route: "/inventory" },
     { icon: <FaTruck size={40} />, title: "Schedule Delivery", description: "Plan and assign delivery schedules.", route: "/assigndelivery" },
-    { icon: <FaUsers size={40} />, title: "Manage Employees", description: "Handle employee account." },
+    { icon: <FaUsers size={40} />, title: "Manage Employees", description: "Handle employee account." , route: "/manageemp"},
     { icon: <FaFileInvoice size={40} />, title: "Manage Invoices", description: "Process invoices efficiently.", route: "/invoice" },
     { icon: <FaBullseye size={40} />, title: "Manage Seller Targets", description: "Set and monitor seller performance targets.", route: "/ManageTarget" },
     { icon: <FaMapMarkerAlt size={40} />, title: "View Delivery Status", description: "Track live delivery status updates.", route: "/deliverystatus"},
-    { icon: <FaChartBar size={40} />, title: "Generate Reports", description: "Generate sales, delivery, and performance reports." },
+    { icon: <FaChartBar size={40} />, title: "Generate Reports", description: "Generate invoice information reports.", route: "/reports" },
   ];
 
   return (
@@ -21,7 +21,7 @@ const Dashboard = () => {
       <div className="navbar">
         <h2>Admin Panel</h2>
         <div className="profile-container">
-          <img src="https://avatar.iran.liara.run/public/35" alt="Profile" className="profile-image" />
+          <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Profile" className="profile-image" />
         </div>
       </div>
 

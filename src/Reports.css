@@ -1,0 +1,75 @@
+.report-container {
+  padding: 20px;
+}
+
+.report-table {
+  width: 109%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.report-table th,
+.report-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.report-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.report-table td ul {
+  list-style-type: disc;
+}
+
+.report-filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.report-filters input[type='date'] {
+  padding: 5px;
+  
+}
+.report-filters button {
+  padding: 6px 12px;
+  cursor: pointer;
+}
+.select{
+  padding: 5px 80px;
+  
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #printable-report, #printable-report * {
+    visibility: visible;
+  }
+
+  #printable-report {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+
+  .report-filters,
+  button {
+    display: none;
+  }
+}
+
+.filter-summary-row {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
