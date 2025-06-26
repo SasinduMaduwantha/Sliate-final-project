@@ -84,17 +84,6 @@ const DeliveriesScreen = () => {
     };
 
     fetchDeliveries();
-
-    // BackHandler for Android hardware back button
-    const backAction = () => {
-      router.push('/dashboard');
-      return true; // prevent default behavior (exit app)
-    };
-
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
-
-    // Cleanup backHandler when component unmounts
-    return () => backHandler.remove();
   }, []);
 
   const showLocation = (latitude: number, longitude: number, item: Delivery) => {

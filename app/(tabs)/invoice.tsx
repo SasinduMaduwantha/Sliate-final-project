@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
-import { getFirestore, collection, getDocs, query, doc, getDoc, setDoc, where } from 'firebase/firestore';
-import { initializeApp } from 'firebase/app';
+import {  collection, getDocs, query, doc, getDoc, setDoc, where } from 'firebase/firestore';
+
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from '@react-native-picker/picker';

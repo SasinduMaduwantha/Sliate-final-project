@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, ImageBackground, Alert, BackHandler } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import * as Crypto from 'expo-crypto';  
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc } from "firebase/firestore";
+import {  collection, addDoc } from "firebase/firestore";
 import { db } from '../../config/firebaseConfig';
 
 export default function SetPasswordScreen() {

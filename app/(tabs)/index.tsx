@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, Image, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import {  collection, getDocs, query, where } from 'firebase/firestore';
+import {  signInWithEmailAndPassword } from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { db , auth } from '../../config/firebaseConfig';
 
@@ -14,66 +13,64 @@ export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = async () => {
-    if (!email || !password) {
-      Alert.alert('Error', 'Please enter both email and password.');
+ const handleLogin = async () => {
+  if (!email || !password) {
+    Alert.alert('Error', 'Please enter both email and password.');
+    return;
+  }
+
+  try {
+    // Firebase Auth Login
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    // Check if email is verified
+    if (!user.emailVerified) {
+      Alert.alert('Email Not Verified', 'Please verify your email before logging in.');
       return;
     }
-  
-    try {
-      // Firebase Auth Login
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-  
-      // Check if email is verified
-      if (!user.emailVerified) {
-        Alert.alert('Email Not Verified', 'Please verify your email before logging in.');
-        return;
-      }
-  
-      // Store email in AsyncStorage
-      await AsyncStorage.setItem('userEmail', email);
-  
-      // Fetch employeeNo from Firestore
-      const userQuery = query(collection(db, 'users'), where('email', '==', email));
-      const userSnapshot = await getDocs(userQuery);
-  
-      if (!userSnapshot.empty) {
-        const userData = userSnapshot.docs[0].data();
-        const employeeNo = userData.employeeNo || 'Unknown';
-  
-        await AsyncStorage.setItem('employeeNo', employeeNo);
-      }
-  
-      router.push('/dashboard'); // Navigate to dashboard
-    } catch (error: any) {
-      
-      let message = 'An error occurred during login.';
-  
-      switch (error.code) {
-        case 'auth/user-not-found':
-          message = 'No user found with this email.';
-          break;
-        case 'auth/wrong-password':
-          message = 'Incorrect email or password. Please try again.'; //password error
-          break;
-        case 'auth/invalid-email':
-          message = 'Incorrect email or password. Please try again.'; // email format error
-          break;
-        case 'auth/network-request-failed':
-          message = 'Network error. Please check your connection.';
-          break;
-        case 'auth/invalid-credential':
-          message = 'Incorrect email or password. Please try again.'; // incomplete email or password
-          break;
-        default:
-          message = error.message || 'Something went wrong. Please try again later.';
-          break;
-      }
-  
-      Alert.alert('Login Failed', message);
+
+    // Fetch employeeNo from Firestore
+    const userQuery = query(collection(db, 'users'), where('email', '==', email));
+    const userSnapshot = await getDocs(userQuery);
+
+    // If no matching user document found
+    if (userSnapshot.empty) {
+      Alert.alert('Account Suspended', 'Administrator suspended your account.');
+      return;
     }
-  };
+
+    // If found, save data to AsyncStorage
+    const userData = userSnapshot.docs[0].data();
+    const employeeNo = userData.employeeNo || 'Unknown';
+    await AsyncStorage.setItem('userEmail', email);
+    await AsyncStorage.setItem('employeeNo', employeeNo);
+
+    router.push('/dashboard'); // Navigate to dashboard
+  } catch (error: any) {
+    let message = 'An error occurred during login.';
+
+    switch (error.code) {
+      case 'auth/user-not-found':
+        message = 'No user found with this email.';
+        break;
+      case 'auth/wrong-password':
+      case 'auth/invalid-email':
+      case 'auth/invalid-credential':
+        message = 'Incorrect email or password. Please try again.';
+        break;
+      case 'auth/network-request-failed':
+        message = 'Network error. Please check your connection.';
+        break;
+      default:
+        message = error.message || 'Something went wrong. Please try again later.';
+        break;
+    }
+
+    Alert.alert('Login Failed', message);
+  }
+};
+
   
   
 

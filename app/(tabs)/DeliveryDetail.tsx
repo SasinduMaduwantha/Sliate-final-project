@@ -32,6 +32,10 @@ const DeliveryDetail = () => {
   const [rejectionReason, setReason] = useState('');
   const [open, setOpen] = useState(false);
   const [employeeNo, setEmployeeNo] = useState('');
+  const [openTime, setOpenTime] = useState('');
+  const [closeTime, setCloseTime] = useState('');
+  const [closeDate, setCloseDate] = useState('');
+
 
   useEffect(() => {
     (async () => {
@@ -125,7 +129,7 @@ const DeliveryDetail = () => {
             // Delete the entire document if billNos is now empty
             await deleteDoc(docSnapshot.ref);
             console.log(`Deleted document ${docSnapshot.id} from assignedDeliveries`);
-            router.push('/deliveries');
+            router.push('/dashboard');
           } else {
             // Otherwise, update the array
             await updateDoc(docSnapshot.ref, {
@@ -160,11 +164,11 @@ const DeliveryDetail = () => {
   }
 
 
-  const fetchShopImage = async () => {
+  const fetchShopDetails = async () => {
   try {
     const normalizedShopName = Array.isArray(shopName)
-  ? shopName[0]?.trim().toLowerCase()
-  : shopName?.trim().toLowerCase();
+      ? shopName[0]?.trim().toLowerCase()
+      : shopName?.trim().toLowerCase();
     if (!normalizedShopName) return;
 
     const shopRef = doc(db, 'shops', normalizedShopName);
@@ -172,18 +176,20 @@ const DeliveryDetail = () => {
 
     if (shopSnap.exists()) {
       const data = shopSnap.data();
-      if (data.shopImage) {
-        setShopImage(data.shopImage);
-      }
+      if (data.shopImage) setShopImage(data.shopImage);
+      if (data.openTime) setOpenTime(data.openTime);
+      if (data.closeTime) setCloseTime(data.closeTime);
+      if (data.closeDate) setCloseDate(data.closeDate);
     } else {
-      console.warn('No such shop found for image.');
+      console.warn('No such shop found for details.');
     }
   } catch (error) {
-    console.error('Error fetching shop image:', error);
+    console.error('Error fetching shop details:', error);
   }
 };
 
-fetchShopImage();
+
+fetchShopDetails();
 
   return (
   <FlatList
@@ -195,11 +201,14 @@ fetchShopImage();
       <>
         <Text style={styles.header}>Delivery Details</Text>
         <View style={styles.card}>
-          <Text><Text style={styles.label}>Bill No:</Text> {billNo}</Text>
-          <Text><Text style={styles.label}>Shop Name:</Text> {shopName}</Text>
-          <Text><Text style={styles.label}>Owner:</Text> {ownerName}</Text>
-          <Text><Text style={styles.label}>Contact:</Text> {contactNo}</Text>
-          <Text><Text style={styles.label}>Address:</Text> {address}</Text>
+          <Text style={{ ...styles.labelRow }}><Text style={styles.label}>Bill No:</Text> {billNo}</Text>
+          <Text style={{ ...styles.labelRow }}><Text style={styles.label}>Shop Name:</Text> {shopName}</Text>
+          <Text style={{ ...styles.labelRow }}><Text style={styles.label}>Owner:</Text> {ownerName}</Text>
+          <Text style={{ ...styles.labelRow }}><Text style={styles.label}>Contact:</Text> {contactNo}</Text>
+          <Text style={{ ...styles.labelRow }}><Text style={styles.label}>Address:</Text> {address}</Text>
+          <Text style={{ ...styles.labelRow }}><Text style={styles.label}>Open Time:</Text> {openTime}</Text>
+         <Text style={{ ...styles.labelRow }}><Text style={styles.label}>Close Time:</Text> {closeTime}</Text>
+          <Text style={{ ...styles.labelRow }}><Text style={styles.label}>Close Date:</Text> {closeDate}</Text>
         </View>
 
         {/* Status Dropdown */}
@@ -283,7 +292,11 @@ const styles = StyleSheet.create({
     margin: 10,
     elevation: 3,
   },
-  label: { fontWeight: 'bold' },
+  label: { fontWeight: 'bold', marginTop:20 },
+  labelRow:{
+marginBottom:10,
+  },
+
   map: {
     height: 300,
     marginHorizontal: 10,

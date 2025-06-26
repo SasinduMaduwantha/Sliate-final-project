@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, Image, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useRouter } from 'expo-router';
-import { initializeApp } from "firebase/app";
-import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
+import {  doc, setDoc, getDoc, collection, query, where, getDocs,deleteDoc } from "firebase/firestore";
 import * as ImagePicker from 'expo-image-picker';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { db } from '../../config/firebaseConfig';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect } from 'react';
+
 
 export default function AddShopScreen() {
   const router = useRouter();
@@ -25,6 +27,8 @@ export default function AddShopScreen() {
   const [closeTime, setCloseTime] = useState('');
   const [isOpenTimePickerVisible, setOpenTimePickerVisible] = useState(false);
   const [isCloseTimePickerVisible, setCloseTimePickerVisible] = useState(false);
+  const [jobType, setJobType] = useState('');
+
 
   // Weekday selector state
   const [closeDate, setCloseDate] = useState('None');
@@ -44,14 +48,86 @@ export default function AddShopScreen() {
     setShopDetails(null); // Clear shop details on reset
   };
 
+  useEffect(() => {
+  const fetchJobType = async () => {
+    const userEmail = await AsyncStorage.getItem('userEmail');
+    if (!userEmail) return;
+
+    const q = query(collection(db, 'users'), where('email', '==', userEmail));
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+      const userData = querySnapshot.docs[0].data();
+      setJobType(userData.jobType); // Set jobType for access control
+    }
+  };
+  fetchJobType();
+}, []);
+
+
+const handleDelete = async () => {
+  if (!shopName) {
+    Alert.alert('Error', 'Please search and select a shop to delete.', [{ text: 'OK' }]);
+    return;
+  }
+
+  Alert.alert(
+    'Confirm Delete',
+    'Are you sure you want to delete this shop?',
+    [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            const normalizedShopName = shopName.trim().toLowerCase();
+            await deleteDoc(doc(db, "shops", normalizedShopName));
+            Alert.alert('Deleted', 'Shop deleted successfully.', [{ text: 'OK' }]);
+            clearFields();
+          } catch (error) {
+            console.error("Error deleting shop: ", error);
+            Alert.alert('Error', 'Failed to delete shop.', [{ text: 'OK' }]);
+          }
+        },
+      },
+    ]
+  );
+};
+
+
   const handleSubmit = async () => {
-    if (!shopName || !ownerName || !contactNo || !address || !city) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const parseTime = (timeStr: string): number => {
+    const [time, period] = timeStr.split(' ');
+    let [hours, minutes] = time.split(':').map(Number);
+    if (period.toLowerCase() === 'pm' && hours !== 12) hours += 12;
+    if (period.toLowerCase() === 'am' && hours === 12) hours = 0;
+    return hours * 60 + minutes; // Convert to minutes for comparison
+  };
+
+    if (!shopName || !ownerName || !contactNo || !address || !city && email) {
       Alert.alert('Error', 'Please fill out all fields.', [{ text: 'OK' }]);
       return;
+
     } else if (contactNo.length !== 10 || !/^\d+$/.test(contactNo)) {
       Alert.alert('Error', 'Please enter a valid 10-digit contact number.', [{ text: 'OK' }]);
       return;
+    
+    }else if(!openTime || !closeTime){
+      Alert.alert('Error', 'Please set both open time and close time', [{ text: 'OK' }]);
+      return;
     }
+    if (email && !emailRegex.test(email)) {
+    Alert.alert('Error', 'Please enter a valid email address.', [{ text: 'OK' }]);
+    return;
+  }
+  const openTimeInMinutes = parseTime(openTime);
+  const closeTimeInMinutes = parseTime(closeTime);
+
+  if (openTimeInMinutes >= closeTimeInMinutes) {
+    Alert.alert('Error', 'Open time must be before close time.', [{ text: 'OK' }]);
+    return;
+  }
   
     const normalizedShopName = shopName.trim().toLowerCase();
     const normalizedAddress = address.trim().toLowerCase();
@@ -273,6 +349,13 @@ export default function AddShopScreen() {
       <TouchableOpacity style={styles.submitbutton} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Submit / Update</Text>
       </TouchableOpacity>
+
+      {jobType === 'Distributor' && (
+  <TouchableOpacity style={[styles.submitbutton, { backgroundColor: 'blue' }]} onPress={handleDelete}>
+    <Text style={styles.buttonText}>Delete Shop</Text>
+  </TouchableOpacity>
+      )}
+
 
       {/* Clear All Button */}
       <TouchableOpacity style={styles.clearButton} onPress={clearFields}>

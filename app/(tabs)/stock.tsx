@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
-import { getFirestore, collection, getDocs, query } from 'firebase/firestore';
-import { initializeApp } from 'firebase/app';
+import {  collection, getDocs, query } from 'firebase/firestore';
 import { useRouter } from 'expo-router';
 import { db } from '../../config/firebaseConfig'; 
 

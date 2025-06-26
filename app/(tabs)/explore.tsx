@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, ImageBackground, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useRouter } from 'expo-router';
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, query, where, getDocs } from "firebase/firestore";
-import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import {  collection, addDoc, query, where, getDocs } from "firebase/firestore";
+import {  createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { db, auth } from '../../config/firebaseConfig';
 
 export default function RegistrationScreen() {
@@ -66,6 +65,7 @@ export default function RegistrationScreen() {
         Alert.alert('Error', 'This account is already registered.');
         return;
       }
+      
 
       // Create user in Firebase Auth
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -88,8 +88,13 @@ export default function RegistrationScreen() {
       Alert.alert('Success', 'Registration successful. Please verify your email.');
       router.push('/');
     } catch (e: any) {
-      console.error("Registration Error:", e);
-      Alert.alert('Error', e.message || 'Registration failed.');
+      
+        if (e.code === 'auth/email-already-in-use') {
+         Alert.alert('Error', 'This account is already registered.');
+        } else {
+           Alert.alert('Error', e.message || 'Registration failed.');
+  }
+      
     }
   };
 
